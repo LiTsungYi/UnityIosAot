@@ -6,40 +6,42 @@ using UnityEngine;
 public class AotTest1
 {
 	// NOTE: Direct call Generic Method
-    public void MethodA<T>()
-    {
+	public void MethodA<T>()
+	{
 		Debug.Log( "MethodA" );
-    }
+	}
 
 	// NOTE: Indirect call Generic Method
 	public void MethodB<T>()
-    {
+	{
 		Debug.Log( "MethodB" );
 		InternalB<T>();
-    }
+	}
 
 	// NOTE: Call Generic Method via Reflection
 	public void MethodC<T>()
-    {
+	{
 		Debug.Log( "MethodC" );
 
-        Type type = typeof( T );
-		MethodInfo methodInfo = typeof( AotTest1 ).GetMethod( "InternalC" );
-		if (null != methodInfo) {
+		MethodInfo methodInfo = typeof( AotTest1 ).GetMethod( "InternalC", BindingFlags.NonPublic | BindingFlags.Instance );
+		if (null != methodInfo)
+		{
+			Type type = typeof( T );
 			methodInfo = methodInfo.MakeGenericMethod (new Type[] { type });
 			methodInfo.Invoke (this, null);
 		}
-    }
+	}
 	
 	// NOTE: Call Generic Method via Reflection (Direct Called before)
 	public void MethodD<T>()
-    {
+	{
 		Debug.Log( "MethodD" );
 		InternalD<T>();
 
-        Type type = typeof( T );
-		MethodInfo methodInfo = typeof( AotTest1 ).GetMethod( "InternalD" );
-		if (null != methodInfo) {
+		MethodInfo methodInfo = typeof( AotTest1 ).GetMethod( "InternalD", BindingFlags.NonPublic | BindingFlags.Instance  );
+		if (null != methodInfo)
+		{
+			Type type = typeof( T );
 			methodInfo = methodInfo.MakeGenericMethod (new Type[] { type });
 			methodInfo.Invoke (this, null);
 		}
@@ -49,17 +51,17 @@ public class AotTest1
 	public void MethodE<T>()
 	{
 		Debug.Log( "MethodE" );
-		
-		Type type = typeof( T );
-		MethodInfo methodInfo = typeof( AotTest1 ).GetMethod( "InternalE" );
-		if (null != methodInfo) {
+
+		MethodInfo methodInfo = typeof( AotTest1 ).GetMethod( "InternalE", BindingFlags.NonPublic | BindingFlags.Instance  );
+		if (null != methodInfo)
+		{
+			Type type = typeof( T );
 			methodInfo = methodInfo.MakeGenericMethod (new Type[] { type });
 			methodInfo.Invoke (this, null);
 		}
 		
 		InternalE<T>();
 	}
-	
 	
 	private void InternalB<T>()
 	{

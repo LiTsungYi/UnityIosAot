@@ -2,8 +2,8 @@
 
 public class Main : MonoBehaviour
 {
-    void Start()
-    {
+	public void Start()
+	{
 		// NOTE: Test generic
 		var test1 = new AotTest1();
 
@@ -14,7 +14,16 @@ public class Main : MonoBehaviour
 		test1.MethodB<int>();
 
 		// NOTE: Call Generic Method via Reflection
-		test1.MethodC<int>(); // ERROR: AOT
+		//test1.MethodC<int>();
+
+		//ExecutionEngineException: Attempting to JIT compile method 'AotTest1:InternalC<int> ()' while running with --aot-only.
+		//
+		//at System.Reflection.MonoMethod.Invoke (System.Object obj, BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x00000] in <filename unknown>:0 
+		//	Rethrow as TargetInvocationException: Exception has been thrown by the target of an invocation.
+		//		at System.Reflection.MonoMethod.Invoke (System.Object obj, BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x00000] in <filename unknown>:0 
+		//		at System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) [0x00000] in <filename unknown>:0 
+		//		at AotTest1.MethodC[Int32] () [0x00000] in <filename unknown>:0 
+		//		at Main.Start () [0x00000] in <filename unknown>:0
 
 		// NOTE: Call Generic Method via Reflection (Direct Called before)
 		test1.MethodD<int>();
@@ -24,7 +33,7 @@ public class Main : MonoBehaviour
 
 		int dummy = 42;
 		// NOTE: Test concrete
-		var test2 = new AotTest2<int>();
+		var test2 = new AotTest2();
 
 		// NOTE: Call Generic Method from Concrete object
 		test2.Method1( dummy );
@@ -33,18 +42,26 @@ public class Main : MonoBehaviour
 		test2.Method2( dummy );
 
 		// NOTE: Test interface
-		IAotTest<int> test = test2;
+		IAotTest test3 = test2;
 		
 		// NOTE: Call Generic Method from Interface
-		test.Method3( dummy ); // ERROR: AOT
+		//test3.Method3( dummy ); // ERROR: AOT
 
-		if ( false )
-		{
-			// NOTE: Explicit call Method
-			test2.Method4( dummy );
-		}
+		//ExecutionEngineException: Attempting to JIT compile method 'AotTest2:Method3<int> (int)' while running with --aot-only.
+		//
+		//at Main.Start () [0x00000] in <filename unknown>:0 
+		//	
+		//	(Filename:  Line: -1)
 
 		// NOTE: Call Generic Method from Interface (Direct Called before)
-		test.Method4 (dummy);
-    }
+		test3.Method4( dummy );
+	}
+
+	private void Dummy()
+	{
+		int dummy = 42;
+		var test = new AotTest2();
+		// NOTE: Explicit call Method4
+		test.Method4( dummy );
+	}
 }
