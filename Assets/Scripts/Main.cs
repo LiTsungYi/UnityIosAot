@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Main : MonoBehaviour
+public partial class Main : MonoBehaviour
 {
 	public void Start()
 	{
@@ -14,7 +14,7 @@ public class Main : MonoBehaviour
 		test1.MethodB<int>();
 
 		// NOTE: Call Generic Method via Reflection
-		//test1.MethodC<int>();
+		test1.MethodC<int>();
 
 		//ExecutionEngineException: Attempting to JIT compile method 'AotTest1:InternalC<int> ()' while running with --aot-only.
 		//
@@ -45,7 +45,7 @@ public class Main : MonoBehaviour
 		IAotTest test3 = test2;
 		
 		// NOTE: Call Generic Method from Interface
-		//test3.Method3( dummy ); // ERROR: AOT
+		test3.Method3( dummy ); // ERROR: AOT
 
 		//ExecutionEngineException: Attempting to JIT compile method 'AotTest2:Method3<int> (int)' while running with --aot-only.
 		//
@@ -64,4 +64,12 @@ public class Main : MonoBehaviour
 		// NOTE: Explicit call Method4
 		test.Method4( dummy );
 	}
+
+	private void TestMethod()
+	{
+		TestPartial ();
+
+	}
+
+	partial void TestPartial();
 }
